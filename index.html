@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayMint - Free Online Games</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#10131c;color:#f5f7fb;font-family:Arial,sans-serif}
+header{padding:20px;background:#191e2b;display:flex;justify-content:space-between}
+.logo{color:#c8ff4d;font-size:24px;font-weight:bold}
+.hero{text-align:center;padding:40px 15px}
+h1{font-size:42px}h1 span{color:#c8ff4d}
+p{color:#b5bfd0;line-height:1.6}
+button{padding:12px 16px;border:0;border-radius:9px;background:#c8ff4d;color:#10131c;font-weight:bold;cursor:pointer;margin:4px}
+.games{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px}
+.card{background:#191e2b;border:1px solid #30394d;border-radius:16px;padding:20px}
+.game{background:#10131c;padding:14px;border-radius:10px;margin-top:15px}
+input{padding:12px;width:100%;margin:8px 0}
+.ad{margin:20px;padding:20px;border:1px dashed #566078;text-align:center;color:#9da8bc}
+footer{padding:25px;background:#191e2b;color:#b5bfd0}
+</style>
+</head>
+<body>
+<header><div class="logo">✦ PlayMint</div><div>Free Games</div></header>
+<section class="hero">
+<p>WELCOME TO YOUR NEXT CHALLENGE</p>
+<h1>Play a little.<br><span>Level up.</span></h1>
+<p>Free games to test your reflexes, brain and number skills.</p>
+<button onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">Play Now ↓</button>
+<h3>Your points: <span id="points">0</span></h3>
+</section>
+<div class="ad">ADVERTISEMENT SPACE<br><small>Ads can be added after approval.</small></div>
+<section class="games" id="games">
+<div class="card"><h2>⚡ Reflex Rush</h2><p>Wait for green, then tap as fast as you can.</p><div class="game"><button id="reflex" onclick="startReflex()">Start</button><p id="reaction">Ready?</p></div></div>
+<div class="card"><h2>🧠 Brain Blitz</h2><p>Answer this quick maths question.</p><div class="game"><h3>12 × 8 = ?</h3><button onclick="quiz(86)">86</button><button onclick="quiz(96)">96</button><button onclick="quiz(108)">108</button><p id="quizResult"></p></div></div>
+<div class="card"><h2>🎯 Number Hunt</h2><p>Guess the secret number from 1 to 100.</p><div class="game"><input id="guess" type="number" min="1" max="100" placeholder="Enter your guess"><button onclick="checkGuess()">Check</button><button onclick="resetNumber()">New Number</button><p id="numberResult"></p></div></div>
+</section>
+<footer><strong>PlayMint</strong><p>Free games for everyone. Points have no cash value.</p><p>Privacy · Terms · Contact</p></footer>
+<script>
+let points=0,secret=Math.floor(Math.random()*100)+1;
+function award(n){points+=n;document.getElementById('points').textContent=points}
+let timer,started=false,startTime=0,finished=false;
+function startReflex(){
+const b=document.getElementById('reflex'),m=document.getElementById('reaction');
+clearTimeout(timer);finished=false;started=false;b.style.background='#ff7272';b.textContent='Wait...';m.textContent='Get ready!';
+timer=setTimeout(()=>{started=true;startTime=performance.now();b.style.background='#78f28a';b.textContent='TAP NOW!';b.onclick=finishReflex},1000+Math.random()*2000);
+b.onclick=()=>{if(!started){clearTimeout(timer);m.textContent='Too early! Try again.';b.textContent='Try again';b.style.background='#c8ff4d';b.onclick=startReflex}else finishReflex()};
+}
+function finishReflex(){if(!started||finished)return;finished=true;started=false;let ms=Math.round(performance.now()-startTime);award(Math.max(10,500-ms));document.getElementById('reaction').textContent='Your time: '+ms+' ms';let b=document.getElementById('reflex');b.textContent='Play again';b.style.background='#c8ff4d';b.onclick=startReflex}
+let quizDone=false;
+function quiz(n){if(quizDone)return;quizDone=true;if(n===96){award(100);document.getElementById('quizResult').textContent='Correct! +100 points.'}else document.getElementById('quizResult').textContent='The correct answer is 96.'}
+function checkGuess(){let n=Number(document.getElementById('guess').value),m=document.getElementById('numberResult');if(!n||n<1||n>100){m.textContent='Enter a number from 1 to 100.';return}if(n===secret){m.textContent='Correct! +150 points.';award(150)}else m.textContent=n<secret?'Too low. Try higher!':'Too high. Try lower!'}
+function resetNumber(){secret=Math.floor(Math.random()*100)+1;document.getElementById('guess').value='';document.getElementById('numberResult').textContent='New number ready!'}
+</script>
+</body>
+  </html>
+  
